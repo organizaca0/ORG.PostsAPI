@@ -4,13 +4,13 @@
     {
         public int PostId { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
-        public int WatchListId { get; set; }  // Foreign key to WatchList
-        public WatchList WatchList { get; set; }  // Navigation property to WatchList
+        public User User { get; set; } //define a conexão de post com user
         public string Title { get; set; }
         public string Content { get; set; }
         public int PositiveScore { get; set; }
         public int NegativeScore { get; set; }
-        public string ReadTime { get; set; }  // Added ReadTime property
+        public string ReadTime { get; set; }  
+
+        public List<string> Tags {  get; set; }
     }
 }

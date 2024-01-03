@@ -18,7 +18,7 @@ namespace ORG.PostsAPI.Database
         // tabelas
         public DbSet <Post> Posts { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<WatchList> watchLists { get; set; }
+        public DbSet<WatchList> WatchLists { get; set; }
         public DbSet<WatchListPost> WatchListPosts { get; set; }
     }
 }
