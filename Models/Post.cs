@@ -23,7 +23,7 @@ namespace ORG.PostsAPI.Models
         public int NegativeScore { get; set; }
         public string ReadTime { get; set; }  
         public List<string> Tags {  get; set; }
-        public DateTime CreateDate { get; set; } // Stores date only
+        public DateTime CreatedAt { get; set; } // Stores date only
         public DateTime LastUpdate { get; set; } // store date and hour
         [JsonIgnore]
         public Boolean Active { get; set; }

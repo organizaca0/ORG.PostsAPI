@@ -23,7 +23,7 @@ namespace ORG.PostsAPI.Services
             post.NegativeScore = 0;
             post.Content = SanitizeHtml(post.Content);
             post.LastUpdate = DateTime.Now;
-            post.CreateDate = DateTime.Now.Date;
+            post.CreatedAt = DateTime.Now.Date;
             post.Active = true;
             DbContext.Posts.Add(post);
             try
