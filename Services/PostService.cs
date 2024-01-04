@@ -60,26 +60,18 @@ namespace ORG.PostsAPI.Services
             {
                 return false;
             }
-
-            try
+            switch (rating)
             {
-                switch (rating)
-                {
-                    case "positive":
-                        postToRate.PositiveScore ++;
-                        break;
-                    case "negative":
-                        postToRate.NegativeScore ++;
-                        break;
-                }
+                case "positive":
+                postToRate.PositiveScore ++;
+                break;
 
-                await DbContext.SaveChangesAsync();
-                return true;
+                case "negative":
+                postToRate.NegativeScore ++;
+                break;
             }
-            catch
-            {
-                return false;
-            }
+            await DbContext.SaveChangesAsync();
+            return true;
         }
         public async Task <Post> GetPost(int postId)
         {
@@ -96,16 +88,8 @@ namespace ORG.PostsAPI.Services
                 existingPost.Content = SanitizeHtml(updatedPost.Content);
                 existingPost.Tags = updatedPost.Tags;
                 existingPost.ReadTime = CalculateReadTime(updatedPost.Content);
-
-                try
-                {
-                    await DbContext.SaveChangesAsync();
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                await DbContext.SaveChangesAsync();
+                return true;
             }
             else
             {

@@ -19,7 +19,7 @@ namespace ORG.PostsAPI.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .HasKey(u => u.UserId);
+                .HasKey(u => u.UserGuid);
 
             modelBuilder.Entity<Post>()
                 .HasKey(p => p.PostId);
@@ -27,10 +27,18 @@ namespace ORG.PostsAPI.Database
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.User)
                 .WithMany(u => u.Posts) // A User can have many Posts
-                .HasForeignKey(p => p.UserId)
+                .HasForeignKey(p => p.UserGuid)
+                .HasForeignKey(p=>p.UserName)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
-            modelBuilder.Entity<WatchList>().HasKey(e => e.WatchListId);
+            modelBuilder.Entity<WatchList>()
+                .HasKey(e => e.WatchListId);
+
+            modelBuilder.Entity<WatchList>()
+                .HasOne(e => e.User)
+                .WithMany(w => w.Watchs)
+                .HasForeignKey(w => w.UserGuid)
+                .OnDelete(DeleteBehavior.ClientSetNull);
             base.OnModelCreating(modelBuilder);
         }
         // tabelas

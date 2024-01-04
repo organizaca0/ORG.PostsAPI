@@ -66,3 +66,7 @@ C:\Users\WOOPI\Desktop\nicolas\NICOLAS\PROJETOS\ORG.PostsAPI\ORG.PostsAPI\obj\De
 C:\Users\WOOPI\Desktop\nicolas\NICOLAS\PROJETOS\ORG.PostsAPI\ORG.PostsAPI\obj\Debug\net6.0\ORG.PostsAPI.pdb
 C:\Users\WOOPI\Desktop\nicolas\NICOLAS\PROJETOS\ORG.PostsAPI\ORG.PostsAPI\obj\Debug\net6.0\ORG.PostsAPI.genruntimeconfig.cache
 C:\Users\WOOPI\Desktop\nicolas\NICOLAS\PROJETOS\ORG.PostsAPI\ORG.PostsAPI\obj\Debug\net6.0\ref\ORG.PostsAPI.dll
+C:\Users\WOOPI\Desktop\nicolas\NICOLAS\PROJETOS\ORG.PostsAPI\ORG.PostsAPI\bin\Debug\net6.0\AngleSharp.dll
+C:\Users\WOOPI\Desktop\nicolas\NICOLAS\PROJETOS\ORG.PostsAPI\ORG.PostsAPI\bin\Debug\net6.0\AngleSharp.Css.dll
+C:\Users\WOOPI\Desktop\nicolas\NICOLAS\PROJETOS\ORG.PostsAPI\ORG.PostsAPI\bin\Debug\net6.0\HtmlSanitizer.dll
+C:\Users\WOOPI\Desktop\nicolas\NICOLAS\PROJETOS\ORG.PostsAPI\ORG.PostsAPI\bin\Debug\net6.0\System.Collections.Immutable.dll

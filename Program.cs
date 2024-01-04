@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DatabaseContext>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IWatchListService, WatchListService>();
 
 
 

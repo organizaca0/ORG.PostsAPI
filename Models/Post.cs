@@ -1,13 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ORG.PostsAPI.Models
 {
     public class Post
     {
+        [Key]
         public int PostId { get; set; }
 
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public Guid UserGuid { get; set; }
+
+        [ForeignKey("User")]
+        public string? UserName { get; set; }
+
+        [JsonIgnore]
         public User? User { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
