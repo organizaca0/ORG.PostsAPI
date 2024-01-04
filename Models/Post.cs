@@ -1,10 +1,14 @@
-﻿namespace ORG.PostsAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ORG.PostsAPI.Models
 {
     public class Post
     {
         public int PostId { get; set; }
+
+        [ForeignKey("User")]
         public int UserId { get; set; }
-        public User User { get; set; } //define a conexão de post com user
+        public User? User { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public int PositiveScore { get; set; }

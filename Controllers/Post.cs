@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ORG.PostsAPI.Database;
 using ORG.PostsAPI.Interfaces;
 using ORG.PostsAPI.Models;
 
@@ -7,34 +6,38 @@ namespace ORG.PostsAPI.Controllers
 {
     public class Posts : Controller
     {
-        private readonly IPostService _postService;
+        private readonly IPostService PostService;
 
         public Posts(IPostService postService)
         {
-            _postService=postService;  
+            PostService=postService;  
         }
 
         [HttpGet]
-        [Route("GetPost")]
-        public ActionResult<Post> GetPost(int postId)
+        [Route("GetPost/{postId}")]
+        public async Task <ActionResult<Post>> GetPost(int postId)
         {
-            Post post = _postService.GetPost(postId);
-            if(post == null)
+            if(postId >= 0)
             {
-                return NotFound();
+                Post post = await PostService.GetPost(postId);
+                if (post == null)
+                {
+                    return NotFound();
+                }
+                return Ok(post);
             }
-            return Ok(post);
+            return BadRequest("Invalid ID");
         }
 
         [HttpPost]
         [Route("CreatePost")]
-        public async Task<ActionResult<Post>> CreatePost(Post post)
+        public async Task<ActionResult<Post>> CreatePost([FromBody] Post post)
         {
             if (post == null)
             {
                 return BadRequest("Empty body");
             }
-            Boolean created = await _postService.CreatePost(post);
+            Boolean created = await PostService.CreatePost(post);
             if (created)
             {
                 return Created("Created", post);
@@ -42,18 +45,50 @@ namespace ORG.PostsAPI.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
-        [Route("UpdatePost")]
-        public async Task<ActionResult<Post>> UpdatePost(int postId,Post post)
+        [HttpPut]
+        [Route("UpdatePost/{postId}")]
+        public async Task<ActionResult<Post>> UpdatePost(int postId, [FromBody] Post post)
         {
-            if (post == null)
+            if (post == null || postId <=0)
             {
-                return BadRequest("Empty body");
+                return BadRequest("Empty body or invalid ID");
             }
-            Boolean updated = await _postService.UpdatePost(postId,post);
+            Boolean updated = await PostService.UpdatePost(postId,post);
             if (updated)
             {
                 return Created("updated", post);
+            }
+            return BadRequest();
+        }
+
+        [HttpPut]
+        [Route("DeletePost/{postId}")]
+        public async Task<ActionResult<Post>> DeletePost(int postId)
+        {
+            if (postId <=0)
+            {
+                return BadRequest("Invalid ID");
+            }
+            Boolean deleted = await PostService.DeletePost(postId);
+            if (deleted)
+            {
+                return Ok("Deleted");
+            }
+            return BadRequest("Post not found");
+        }
+
+        [HttpPut]
+        [Route("RatePost/{rating}/{postId}")]
+        public async Task<ActionResult<Post>> RatePost(int postId, string rating)
+        {
+            if (rating == null || postId <=0)
+            {
+                return BadRequest("Empty kind of rating or invalid ID");
+            }
+            Boolean updated = await PostService.RatePost(postId, rating);
+            if (updated)
+            {
+                return Created("Sucessfully rated ", postId);
             }
             return BadRequest();
         }
