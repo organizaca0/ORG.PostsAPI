@@ -1,13 +1,14 @@
 ﻿using ORG.PostsAPI.Models;
+using System;
 
 namespace ORG.PostsAPI.Interfaces
 {
     public interface IWatchListService
     {
-        Task <WatchList> GetWatchList(int WatchListId);
+        Task <WatchList> GetWatchList(Guid WatchListGuid);
         Task<Boolean> CreateWatchList(WatchList WatchList);
 
-        Task<Boolean> UpdateWatchList(int WatchListId,WatchList updatedWatchList);
-        Task<Boolean> DeleteWatchList(int postId);
+        Task<Boolean> UpdateWatchList(Guid WatchListGuid, WatchList updatedWatchList);
+        Task<Boolean> DeleteWatchList(Guid WatchListGuid);
     }
 }

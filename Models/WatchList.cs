@@ -7,7 +7,7 @@ namespace ORG.PostsAPI.Models
     public class WatchList
     {
         [Key]
-        public int WatchListId { get; set; }
+        public Guid WatchListGuid { get; set; }
         public string WatchListName { get; set; }
 
         [ForeignKey("User")]
@@ -15,5 +15,8 @@ namespace ORG.PostsAPI.Models
         [JsonIgnore]
         public User? User { get; set; }
         public List<int>? Posts { get; set; }
+        [JsonIgnore]
+        public Boolean Active { get; set; }
+
     }
 }

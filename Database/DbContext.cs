@@ -22,7 +22,7 @@ namespace ORG.PostsAPI.Database
                 .HasKey(u => u.UserGuid);
 
             modelBuilder.Entity<Post>()
-                .HasKey(p => p.PostId);
+                .HasKey(p => p.PostGuid);
 
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.User)
@@ -32,7 +32,7 @@ namespace ORG.PostsAPI.Database
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<WatchList>()
-                .HasKey(e => e.WatchListId);
+                .HasKey(e => e.WatchListGuid);
 
             modelBuilder.Entity<WatchList>()
                 .HasOne(e => e.User)

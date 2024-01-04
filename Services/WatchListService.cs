@@ -16,6 +16,8 @@ namespace ORG.PostsAPI.Services
 
         public async Task<bool> CreateWatchList(WatchList WatchList)
         {
+            WatchList.WatchListGuid = Guid.NewGuid();
+            WatchList.Active = true;
             DbContext.WatchLists.Add(WatchList);
             try
             {
@@ -28,9 +30,9 @@ namespace ORG.PostsAPI.Services
             return true;
         }
 
-        public async Task<bool> DeleteWatchList(int watchListId)
+        public async Task<bool> DeleteWatchList(Guid watchListGuid)
         {
-            var listToDelete = await DbContext.WatchLists.FindAsync(watchListId);
+            var listToDelete = await DbContext.WatchLists.FindAsync(watchListGuid);
 
             if (listToDelete == null)
             {
@@ -39,7 +41,7 @@ namespace ORG.PostsAPI.Services
 
             try
             {
-                DbContext.WatchLists.Remove(listToDelete);
+                listToDelete.Active = false;
                 await DbContext.SaveChangesAsync();
                 return true;
             }
@@ -49,15 +51,15 @@ namespace ORG.PostsAPI.Services
             }
         }
 
-        public async Task<WatchList> GetWatchList(int WatchListId)
+        public async Task<WatchList> GetWatchList(Guid watchListGuid)
         {
-            WatchList watchList = await DbContext.WatchLists.FirstOrDefaultAsync(p => p.WatchListId == WatchListId);
-            return watchList;
+            WatchList watchList = await DbContext.WatchLists.FirstOrDefaultAsync(p => p.WatchListGuid == watchListGuid);
+            return watchList?.Active == true ? watchList : null;
         }
 
-        public async Task<bool> UpdateWatchList(int WatchListId, WatchList updatedWatchList)
+        public async Task<bool> UpdateWatchList(Guid watchListGuid, WatchList updatedWatchList)
         {
-            WatchList existingList = await DbContext.WatchLists.FirstOrDefaultAsync(p => p.WatchListId == WatchListId);
+            WatchList existingList = await DbContext.WatchLists.FirstOrDefaultAsync(p => p.WatchListGuid == watchListGuid);
 
             if (existingList != null)
             {

@@ -14,28 +14,28 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetPost/{postId}")]
-        public async Task <ActionResult<Post>> GetPost(int postId)
+        [Route("GetPost")]
+        public async Task <ActionResult<Post>> GetPost([FromQuery] Guid postGuid)
         {
-            if(postId >= 0)
+            if(postGuid != Guid.Empty)
             {
-                Post post = await PostService.GetPost(postId);
+                Post post = await PostService.GetPost(postGuid);
                 if (post == null)
                 {
-                    return NotFound();
+                    return NotFound("Post deleted or not found");
                 }
                 return Ok(post);
             }
-            return BadRequest("Invalid ID");
+            return BadRequest("Invalid GUID");
         }
 
         [HttpPost]
         [Route("CreatePost")]
         public async Task<ActionResult<Post>> CreatePost([FromBody] Post post)
         {
-            if (post == null)
+            if (post == null || post.UserGuid != Guid.Empty)
             {
-                return BadRequest("Empty body");
+                return BadRequest("Empty body or invalid User");
             }
             Boolean created = await PostService.CreatePost(post);
             if (created)
@@ -46,14 +46,14 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpPut]
-        [Route("UpdatePost/{postId}")]
-        public async Task<ActionResult<Post>> UpdatePost(int postId, [FromBody] Post post)
+        [Route("UpdatePost")]
+        public async Task<ActionResult<Post>> UpdatePost([FromQuery] Guid postGuid, [FromBody] Post post)
         {
-            if (post == null || postId <=0)
+            if (post == null || postGuid == Guid.Empty)
             {
                 return BadRequest("Empty body or invalid ID");
             }
-            Boolean updated = await PostService.UpdatePost(postId,post);
+            Boolean updated = await PostService.UpdatePost(postGuid, post);
             if (updated)
             {
                 return Created("updated", post);
@@ -62,14 +62,14 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpPut]
-        [Route("DeletePost/{postId}")]
-        public async Task<ActionResult<Post>> DeletePost(int postId)
+        [Route("DeletePost")]
+        public async Task<ActionResult<Post>> DeletePost([FromQuery] Guid postGuid)
         {
-            if (postId <=0)
+            if (postGuid == Guid.Empty)
             {
-                return BadRequest("Invalid ID");
+                return BadRequest("Invalid GUID");
             }
-            Boolean deleted = await PostService.DeletePost(postId);
+            Boolean deleted = await PostService.DeletePost(postGuid);
             if (deleted)
             {
                 return Ok("Deleted");
@@ -78,17 +78,17 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpPut]
-        [Route("RatePost/{rating}/{postId}")]
-        public async Task<ActionResult<Post>> RatePost(int postId, string rating)
+        [Route("RatePost")]
+        public async Task<ActionResult<Post>> RatePost([FromQuery] Guid postGuid, [FromQuery] string rating)
         {
-            if (rating == null || postId <=0)
+            if (rating == null || postGuid == Guid.Empty)
             {
-                return BadRequest("Empty kind of rating or invalid ID");
+                return BadRequest("Empty kind of rating or invalid GUID");
             }
-            Boolean updated = await PostService.RatePost(postId, rating);
+            Boolean updated = await PostService.RatePost(postGuid, rating);
             if (updated)
             {
-                return Created("Sucessfully rated ", postId);
+                return Created("Sucessfully rated ", postGuid);
             }
             return BadRequest();
         }

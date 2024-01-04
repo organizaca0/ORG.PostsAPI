@@ -17,24 +17,28 @@ namespace ORG.PostsAPI.Services
 
         public async Task<Boolean> CreatePost(Post post)
         {
+            post.PostGuid = Guid.NewGuid();
             post.ReadTime = CalculateReadTime(post.Content);
             post.PositiveScore = 0;
             post.NegativeScore = 0;
             post.Content = SanitizeHtml(post.Content);
+            post.LastUpdate = DateTime.Now;
+            post.CreateDate = DateTime.Now.Date;
+            post.Active = true;
             DbContext.Posts.Add(post);
             try
             {
                 await DbContext.SaveChangesAsync();
+                return true;
             }
             catch
             {
                 return false;
             }
-                return true;
         }
-        public async Task<bool> DeletePost(int postId)
+        public async Task<bool> DeletePost(Guid postGuid)
         {
-            var postToDelete = await DbContext.Posts.FindAsync(postId);
+            var postToDelete = await DbContext.Posts.FindAsync(postGuid);
 
             if (postToDelete == null)
             {
@@ -43,7 +47,7 @@ namespace ORG.PostsAPI.Services
 
             try
             {
-                DbContext.Posts.Remove(postToDelete);
+                postToDelete.Active = false;
                 await DbContext.SaveChangesAsync();
                 return true;
             }
@@ -52,35 +56,14 @@ namespace ORG.PostsAPI.Services
                 return false;
             }
         }
-        public async Task<bool> RatePost(int postId, string rating)
+        public async Task <Post> GetPost(Guid postGuid)
         {
-            var postToRate = await DbContext.Posts.FindAsync(postId);
-
-            if (postToRate == null)
-            {
-                return false;
-            }
-            switch (rating)
-            {
-                case "positive":
-                postToRate.PositiveScore ++;
-                break;
-
-                case "negative":
-                postToRate.NegativeScore ++;
-                break;
-            }
-            await DbContext.SaveChangesAsync();
-            return true;
+            Post post = await DbContext.Posts.FirstOrDefaultAsync(p => p.PostGuid == postGuid);
+            return post?.Active == true ? post : null;
         }
-        public async Task <Post> GetPost(int postId)
+        public async Task<bool> UpdatePost(Guid postGuid, Post updatedPost)
         {
-            Post post = await DbContext.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
-            return post;
-        }
-        public async Task<bool> UpdatePost(int postId, Post updatedPost)
-        {
-            Post existingPost = await DbContext.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
+            Post existingPost = await DbContext.Posts.FirstOrDefaultAsync(p => p.PostGuid == postGuid);
 
             if (existingPost != null)
             {
@@ -88,6 +71,7 @@ namespace ORG.PostsAPI.Services
                 existingPost.Content = SanitizeHtml(updatedPost.Content);
                 existingPost.Tags = updatedPost.Tags;
                 existingPost.ReadTime = CalculateReadTime(updatedPost.Content);
+                existingPost.LastUpdate = DateTime.Now;
                 await DbContext.SaveChangesAsync();
                 return true;
             }
@@ -100,6 +84,28 @@ namespace ORG.PostsAPI.Services
         {
             throw new NotImplementedException();
         }
+        public async Task<bool> RatePost(Guid postGuid, string rating)
+        {
+            var postToRate = await DbContext.Posts.FindAsync(postGuid);
+
+            if (postToRate == null)
+            {
+                return false;
+            }
+            switch (rating)
+            {
+                case "positive":
+                    postToRate.PositiveScore++;
+                    break;
+
+                case "negative":
+                    postToRate.NegativeScore++;
+                    break;
+            }
+            await DbContext.SaveChangesAsync();
+            return true;
+        }
+
         public static string CalculateReadTime(string postContent)
         {
             const int wordsPerMinute = 180;

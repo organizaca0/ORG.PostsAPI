@@ -12,12 +12,12 @@ namespace ORG.PostsAPI.Controllers
             WatchListService=watchListService;
         }
         [HttpGet]
-        [Route("GetWatchList/{watchListId}")]
-        public async Task <ActionResult<WatchList>> GetWatchList(int watchListId)
+        [Route("GetWatchList")]
+        public async Task <ActionResult<WatchList>> GetWatchList([FromQuery] Guid watchListGuid)
         {
-            if (watchListId >= 0)
+            if (watchListGuid != Guid.Empty)
             {
-                WatchList watchList = await WatchListService.GetWatchList(watchListId);
+                WatchList watchList = await WatchListService.GetWatchList(watchListGuid);
                 if (watchList == null)
                 {
                     return NotFound();
@@ -35,7 +35,7 @@ namespace ORG.PostsAPI.Controllers
                 newWatchList.Posts.Add(4);*/
                 return Ok(watchList);
             }
-            return BadRequest("Invalid ID");
+            return BadRequest("Invalid GUID");
         }
 
         [HttpPost]
@@ -54,14 +54,14 @@ namespace ORG.PostsAPI.Controllers
             return BadRequest();
         }
         [HttpPut]
-        [Route("UpdateWatchList/{listId}")]
-        public async Task<ActionResult<Post>> UpdatePost(int listId, [FromBody] WatchList watchList)
+        [Route("UpdateWatchList")]
+        public async Task<ActionResult<Post>> UpdatePost([FromQuery]Guid watchListGuid, [FromBody] WatchList watchList)
         {
-            if (watchList == null || listId <=0)
+            if (watchList == null || watchListGuid != Guid.Empty)
             {
-                return BadRequest("Empty body or invalid ID");
+                return BadRequest("Empty body or invalid GUID");
             }
-            Boolean updated = await WatchListService.UpdateWatchList(listId, watchList);
+            Boolean updated = await WatchListService.UpdateWatchList(watchListGuid, watchList);
             if (updated)
             {
                 return Created("updated", watchList);
@@ -70,14 +70,14 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpPut]
-        [Route("DeleteWatchList/{listId}")]
-        public async Task<ActionResult<Post>> DeleteWatchList(int listId)
+        [Route("DeleteWatchList")]
+        public async Task<ActionResult<Post>> DeleteWatchList([FromQuery]  Guid watchListGuid)
         {
-            if (listId <=0)
+            if (watchListGuid == Guid.Empty)
             {
-                return BadRequest("Invalid ID");
+                return BadRequest("Invalid GUID");
             }
-            Boolean deleted = await WatchListService.DeleteWatchList(listId);
+            Boolean deleted = await WatchListService.DeleteWatchList(watchListGuid);
             if (deleted)
             {
                 return Ok("Deleted");
