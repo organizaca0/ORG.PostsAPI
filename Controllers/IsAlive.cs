@@ -2,6 +2,7 @@
 
 namespace ORG.PostsAPI.Controllers
 {
+    [ApiController]
     public class HealthController : Controller
     {
         [HttpGet]

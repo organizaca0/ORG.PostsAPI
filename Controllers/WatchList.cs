@@ -4,6 +4,8 @@ using ORG.PostsAPI.Models;
 
 namespace ORG.PostsAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class WatchLists : Controller
     {
         private readonly IWatchListService WatchListService;
@@ -11,8 +13,8 @@ namespace ORG.PostsAPI.Controllers
         {
             WatchListService=watchListService;
         }
+
         [HttpGet]
-        [Route("GetWatchList")]
         public async Task <ActionResult<WatchList>> GetWatchList([FromQuery] Guid watchListGuid)
         {
             if (watchListGuid != Guid.Empty)
@@ -39,7 +41,6 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpPost]
-        [Route("CreateWatchList")]
         public async Task<ActionResult<Post>> CreateWatchlist([FromBody] WatchList watchList)
         {
             if (watchList == null)
@@ -53,9 +54,9 @@ namespace ORG.PostsAPI.Controllers
             }
             return BadRequest();
         }
+
         [HttpPut]
-        [Route("UpdateWatchList")]
-        public async Task<ActionResult<Post>> UpdatePost([FromQuery]Guid watchListGuid, [FromBody] WatchList watchList)
+        public async Task<ActionResult<Post>> UpdateWatchList([FromQuery]Guid watchListGuid, [FromBody] WatchList watchList)
         {
             if (watchList == null || watchListGuid != Guid.Empty)
             {
@@ -70,7 +71,6 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpPut]
-        [Route("DeleteWatchList")]
         public async Task<ActionResult<Post>> DeleteWatchList([FromQuery]  Guid watchListGuid)
         {
             if (watchListGuid == Guid.Empty)
@@ -84,6 +84,5 @@ namespace ORG.PostsAPI.Controllers
             }
             return BadRequest("WatchList not found");
         }
-
     }
 }

@@ -16,34 +16,18 @@ namespace ORG.PostsAPI.Database
             optionsBuilder.UseSqlServer(Config.GetConnectionString("DevDatabase"));
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<User>()
-                .HasKey(u => u.UserGuid);
 
-            modelBuilder.Entity<Post>()
+            builder.Entity<Post>()
                 .HasKey(p => p.PostGuid);
 
-            modelBuilder.Entity<Post>()
-                .HasOne(p => p.User)
-                .WithMany(u => u.Posts) // A User can have many Posts
-                .HasForeignKey(p => p.UserGuid)
-                .HasForeignKey(p=>p.UserName)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
-            modelBuilder.Entity<WatchList>()
+            builder.Entity<WatchList>()
                 .HasKey(e => e.WatchListGuid);
-
-            modelBuilder.Entity<WatchList>()
-                .HasOne(e => e.User)
-                .WithMany(w => w.Watchs)
-                .HasForeignKey(w => w.UserGuid)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
         }
         // tabelas
         public DbSet <Post> Posts { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<WatchList> WatchLists { get; set; }
     }
 }

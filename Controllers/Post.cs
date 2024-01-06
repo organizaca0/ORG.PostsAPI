@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ORG.PostsAPI.Interfaces;
 using ORG.PostsAPI.Models;
+using static ORG.PostsAPI.Enums.RateEnum;
 
 namespace ORG.PostsAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class Posts : Controller
     {
         private readonly IPostService PostService;
@@ -14,13 +17,12 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetPost")]
         public async Task <ActionResult<Post>> GetPost([FromQuery] Guid postGuid)
         {
             if(postGuid != Guid.Empty)
             {
                 Post post = await PostService.GetPost(postGuid);
-                if (post == null)
+                if (post == null || !post.Content.Any())
                 {
                     return NotFound("Post deleted or not found");
                 }
@@ -30,7 +32,6 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpPost]
-        [Route("CreatePost")]
         public async Task<ActionResult<Post>> CreatePost([FromBody] Post post)
         {
             if (post == null || post.UserGuid != Guid.Empty)
@@ -46,7 +47,6 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpPut]
-        [Route("UpdatePost")]
         public async Task<ActionResult<Post>> UpdatePost([FromQuery] Guid postGuid, [FromBody] Post post)
         {
             if (post == null || postGuid == Guid.Empty)
@@ -62,7 +62,6 @@ namespace ORG.PostsAPI.Controllers
         }
 
         [HttpPut]
-        [Route("DeletePost")]
         public async Task<ActionResult<Post>> DeletePost([FromQuery] Guid postGuid)
         {
             if (postGuid == Guid.Empty)
@@ -77,20 +76,29 @@ namespace ORG.PostsAPI.Controllers
             return BadRequest("Post not found");
         }
 
-        [HttpPut]
-        [Route("RatePost")]
-        public async Task<ActionResult<Post>> RatePost([FromQuery] Guid postGuid, [FromQuery] string rating)
+        [HttpPatch]
+        [Route("posts/{postGuid}/rate")] // Improved routing for clarity
+        public async Task<IActionResult> RatePost(Guid postGuid, [FromBody] string rating)
         {
             if (rating == null || postGuid == Guid.Empty)
             {
-                return BadRequest("Empty kind of rating or invalid GUID");
+                return BadRequest("Empty rating or invalid GUID");
             }
-            Boolean updated = await PostService.RatePost(postGuid, rating);
+
+            if (!Enum.IsDefined(typeof(RatingType), rating))
+            {
+                return BadRequest("Invalid rating type");
+            }
+
+            bool updated = await PostService.RatePost(postGuid, rating);
+
             if (updated)
             {
-                return Created("Sucessfully rated ", postGuid);
+                return NoContent(); // Appropriate response for successful PATCH
             }
+
             return BadRequest();
         }
+
     }
 }

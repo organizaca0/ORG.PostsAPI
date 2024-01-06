@@ -82,6 +82,7 @@ namespace ORG.PostsAPI.Services
         }
         public IEnumerable<Post> GetAllPosts()
         {
+            // implementar filtro por tags
             throw new NotImplementedException();
         }
         public async Task<bool> RatePost(Guid postGuid, string rating)
@@ -94,11 +95,11 @@ namespace ORG.PostsAPI.Services
             }
             switch (rating)
             {
-                case "positive":
+                case "Positive":
                     postToRate.PositiveScore++;
                     break;
 
-                case "negative":
+                case "Negative":
                     postToRate.NegativeScore++;
                     break;
             }
@@ -142,7 +143,7 @@ namespace ORG.PostsAPI.Services
         }
         
         ///<summary>
-        /// Isso limpa o HTML de possíveis ataques XSS.
+        /// Cleans the html from possible XSS attack.
         ///</summary>
         private string SanitizeHtml (string htmlContent)
         {
