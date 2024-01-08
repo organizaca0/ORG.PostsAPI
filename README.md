@@ -5,6 +5,9 @@ Things missing in this project:
 	- Service
 	- Controller
 }
+- Create SQS consumer and publisher (this kinda depends on the creation of the UserAPI)
+
 Things missing in the whole project:
-- LoginAPI (login, authentication, roles and etc)
-- API to handle S3 uploads (images etc)
+- UserAPI: CRUD of users.
+- LoginAPI: login, authentication, roles and etc
+- LibraryAPI: to handle S3 uploads (images, pdf's etc)

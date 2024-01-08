@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace ORG.PostsAPI.Models
 {
+    [Table("WatchList")]
     public class WatchList
     {
         [Key]
@@ -12,6 +13,8 @@ namespace ORG.PostsAPI.Models
         public string WatchListName { get; set; }
         [Required]
         public Guid UserGuid { get; set; }
+        [JsonIgnore]
+        public User User { get; set; }
         public string? UserName { get; set; }
         public List<Guid>? Posts { get; set; }
         [JsonIgnore]
